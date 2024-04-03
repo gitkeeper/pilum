@@ -1,0 +1,14 @@
+//! # CLI Tests
+//!
+//! This is a test operation for the application's command-line interface (CLI).
+//!
+//! `trycmd::TestCases::new()` creates a new set of test cases. Each `.case()` method appends a new
+//! test case. The paths in the arguments represent test files which contain the definition of each
+//! test case. The library `trycmd` reads these `.md` files and the CLI tests will appraise
+//! different sets of commands based on these definitions.
+#[test]
+fn cli_tests() {
+    trycmd::TestCases::new()
+        .case("tests/commands/*.md")
+        .case("README.md");
+}

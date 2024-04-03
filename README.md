@@ -12,6 +12,17 @@
 
 Pilum is a sophisticated task manager with a CLI and a GUI written in Rust.
 
+Pilum serves as a convenient and easy-to-use task management tool, operated via the command line
+and a graphical interface. It keeps track of your to-do tasks, enabling operations like adding,
+removing and altering tasks as per your requirements. Pilum is equipped with a wide range of
+commands for sophisticated task manipulations.
+
+Essentially, Pilum functions as a list organizer. You can feed details, along with their
+respective parameters, and the program neatly structures and displays it. By integrating
+deadlines and recurring tasks, it becomes a comprehensive to-do manager. Further refinement
+is achieved by incorporating elements like priorities, tags, project groups and more, making
+Pilum a fully-fledged task organization program.
+
 ## Installation
 
 You must have [Rust](https://www.rust-lang.org/) installed on your machine. To install Rust, it's
@@ -22,11 +33,9 @@ Afterwards, you can install this package by running `cargo install pilum`.
 
 ## Usage
 
-Pilum's command-line interface is invoked:
+Pilum's command-line interface is invoked with the following pattern:
 
-```shell
-pilum [options] <command> [<args>]
-```
+`pilum <filter> <command> [ <mods> | <args> ]`
 
 ## Development
 

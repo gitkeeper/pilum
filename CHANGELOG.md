@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- None
+- Added a library called `lib.rs` to extract the application's logic from `main.rs` to.
+- Introduced `trycmd` to enumerate test case files and run them to verify the command's results.
+- Added a test case file for the command `help` and the options `--help` and `-h`.
 
 ### Changed
 
-- None
+- Made some minor adjustments to the [README.md](README.md) to reflect the application's purpose.
 
 ### Deprecated
 

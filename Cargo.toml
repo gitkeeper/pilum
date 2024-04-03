@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 authors = ["Alexander Baumann <alexander.baumann@bluewin.ch"]
-description = "A sophisticated task manager with a CLI and a GUI written in Rust."
+description = "Pilum is a sophisticated task manager with a CLI and a GUI written in Rust."
 repository = "https://github.com/gitkeeper/pilum"
 keywords = ["task", "manager", "productivity", "cli", "gui"]
 categories = ["command-line-utilities", "command-line-interface", "gui"]
@@ -13,3 +13,4 @@ categories = ["command-line-utilities", "command-line-interface", "gui"]
 clap = { version = "4.5", features = ["derive"] }
 
 [dev-dependencies]
+trycmd = "0.15"
