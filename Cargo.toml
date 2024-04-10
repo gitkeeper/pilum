@@ -11,6 +11,9 @@ categories = ["command-line-utilities", "command-line-interface", "gui"]
 
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }
+dirs = "5.0"
+surrealdb = { version = "1.4", features = ["kv-rocksdb"] }
+tokio = { version = "1.37", features = ["macros", "rt-multi-thread"] }
 
 [dev-dependencies]
 trycmd = "0.15"
