@@ -16,14 +16,12 @@ Commands:
   active     Shows active tasks
   add        Adds a new pending task to the task list
   all        Shows all tasks
-  append     Appends text to an existing task description
   completed  Shows completed tasks
   delete     Deletes the specified task
   done       Marks the specified task as completed
   duplicate  Duplicates the specified tasks
   list       Shows most details of tasks
   modify     Modifies the existing task with provided arguments
-  prepend    Prepends text to an existing task description
   help       Print this message or the help of the given subcommand(s)
 
 Options:
@@ -51,14 +49,12 @@ Commands:
   active     Shows active tasks
   add        Adds a new pending task to the task list
   all        Shows all tasks
-  append     Appends text to an existing task description
   completed  Shows completed tasks
   delete     Deletes the specified task
   done       Marks the specified task as completed
   duplicate  Duplicates the specified tasks
   list       Shows most details of tasks
   modify     Modifies the existing task with provided arguments
-  prepend    Prepends text to an existing task description
   help       Print this message or the help of the given subcommand(s)
 
 Options:
@@ -82,14 +78,12 @@ Commands:
   active     Shows active tasks
   add        Adds a new pending task to the task list
   all        Shows all tasks
-  append     Appends text to an existing task description
   completed  Shows completed tasks
   delete     Deletes the specified task
   done       Marks the specified task as completed
   duplicate  Duplicates the specified tasks
   list       Shows most details of tasks
   modify     Modifies the existing task with provided arguments
-  prepend    Prepends text to an existing task description
   help       Print this message or the help of the given subcommand(s)
 
 Options:
