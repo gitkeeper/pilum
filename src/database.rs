@@ -13,8 +13,6 @@
 //! uses the `dirs` crate to get the home directory and appends the default
 //! directory to it.
 //!
-use dirs::home_dir;
-use std::path::PathBuf;
 use surrealdb::engine::local::RocksDb;
 use surrealdb::Surreal;
 
@@ -27,17 +25,31 @@ type SurrealError = surrealdb::Error;
 ///
 pub struct Database;
 
+#[derive(Debug)]
+pub enum DatabaseError {
+    SurrealError(SurrealError),
+    HomeDirNotFound,
+    TempDirCreationFailed,
+}
+
+impl From<SurrealError> for DatabaseError {
+    fn from(err: SurrealError) -> DatabaseError {
+        DatabaseError::SurrealError(err)
+    }
+}
+
 impl Database {
     const NAMESPACE: &'static str = "pilum";
-    const DATABASE: &'static str = "pilum";
 
     /// Initializes a new instance of the `Database` struct and connects to the
-    /// SurrealDB database.
+    /// SurrealDB production database. It uses the `NAMESPACE` constant to specify
+    /// the namespace for SurrealDB to use. The database name is a constant string
+    /// that is used for the production database. The endpoint is the user's home
+    /// directory for the database file inside a hidden directory called .pilum.
     ///
-    /// This method creates a new `SurrealDb` instance and sets the namespace and
-    /// database to use based on the `NAMESPACE` and `DATABASE` constants. It returns
-    /// a `Result` that contains the `SurrealDb` instance if the database connection
-    /// is successful, or a `SurrealError` if the connection fails.
+    /// The function returns a `Result` that contains the `SurrealDb` instance if
+    /// the database connection is successful, or a `SurrealError` if the connection
+    /// fails.
     ///
     /// # Errors
     ///
@@ -46,26 +58,44 @@ impl Database {
     /// not existing, insufficient permissions or a network error if the database is
     /// remote.
     ///
-    pub async fn initialize() -> Result<SurrealDb, SurrealError> {
-        let db = Surreal::new::<RocksDb>(Self::endpoint()).await?;
-        db.use_ns(Self::NAMESPACE).use_db(Self::DATABASE).await?;
+    #[cfg(not(test))]
+    pub async fn initialize() -> Result<SurrealDb, DatabaseError> {
+        let database = "database";
+        let endpoint = dirs::home_dir()
+            .ok_or(DatabaseError::HomeDirNotFound)?
+            .join(".pilum")
+            .join(database);
+        let db = Surreal::new::<RocksDb>(endpoint).await?;
+        db.use_ns(Self::NAMESPACE).use_db(database).await?;
         Ok(db)
     }
 
-    /// Determines the endpoint to the database file.
+    /// Initializes a new instance of the `Database` struct and connects to the
+    /// SurrealDB test database. It uses the `NAMESPACE` constant to specify
+    /// the namespace for SurrealDB to use. The database name is a UUID that is
+    /// generated for each test run. The endpoint is a temporary directory that
+    /// is created for the test database.
     ///
-    /// This method uses the `dirs` crate to get the home directory and appends the
-    /// database directory to it. It returns a `PathBuf` that represents the
-    /// endpoint to the database file.
+    /// The function returns a `Result` that contains the `SurrealDb` instance if
+    /// the database connection is successful, or a `SurrealError` if the connection
+    /// fails.
     ///
     /// # Errors
     ///
-    /// This function will return an error if the home directory cannot be
-    /// determined. This could be due to a variety of reasons, such as the HOME
-    /// environment variable not being set.
+    /// This function will return an error if the SurrealDB database connection
+    /// fails. This could be due to a variety of reasons, such as the database file
+    /// not existing, insufficient permissions or a network error if the database is
+    /// remote.
     ///
-    fn endpoint() -> PathBuf {
-        home_dir().unwrap().join(".pilum").join("database")
+    #[cfg(test)]
+    pub async fn initialize() -> Result<SurrealDb, DatabaseError> {
+        let database = uuid::Uuid::new_v4().to_string();
+        let endpoint = assert_fs::TempDir::new()
+            .map_err(|_| DatabaseError::TempDirCreationFailed)?
+            .join(&database);
+        let db = Surreal::new::<RocksDb>(endpoint).await?;
+        db.use_ns(Self::NAMESPACE).use_db(database).await?;
+        Ok(db)
     }
 }
 
@@ -79,20 +109,7 @@ mod tests {
     // returned by the `initialize` method is `Ok`.
     #[tokio::test]
     async fn test_database_initialization() {
-        let result = Database::initialize().await;
-        assert!(result.is_ok(), "Database initialization failed.");
-    }
-
-    // This test checks the `endpoint` function of the `Database` struct. It calls
-    // the `endpoint` function and asserts that the returned `PathBuf` are correct.
-    #[test]
-    fn test_endpoint_function() {
-        let endpoint = Database::endpoint();
-        assert!(endpoint.is_absolute(), "Path to endpoint is not absolute.");
-        assert_eq!(
-            endpoint,
-            home_dir().unwrap().join(".pilum").join("database"),
-            "Path to endpoint is incorrect."
-        );
+        let db = Database::initialize().await;
+        assert!(db.is_ok(), "Database initialization failed.");
     }
 }

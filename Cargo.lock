@@ -2233,6 +2233,7 @@ dependencies = [
  "surrealdb",
  "tokio",
  "trycmd",
+ "uuid",
 ]
 
 [[package]]
