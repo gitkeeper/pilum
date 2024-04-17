@@ -13,36 +13,17 @@
 //! uses the `dirs` crate to get the home directory and appends the default
 //! directory to it.
 //!
-use std::path::PathBuf;
-use surrealdb::engine::local::RocksDb;
-use surrealdb::Surreal;
+use crate::Error;
 
-type SurrealDb = Surreal<surrealdb::engine::local::Db>;
-type SurrealError = surrealdb::Error;
+use std::path::PathBuf;
+use surrealdb::engine::local::{Db, RocksDb};
+use surrealdb::Surreal;
 
 /// The `Database` struct provides a way to interact with the SurrealDB database.
 /// It does not hold any data itself, but provides methods for initializing and
 /// interacting with the database.
 ///
 pub struct Database;
-
-#[derive(Debug)]
-pub enum DatabaseError {
-    SurrealError(SurrealError),
-    HomeDirNotFound,
-    TempDirCreationFailed,
-}
-
-impl From<SurrealError> for DatabaseError {
-    /// Converts a `SurrealError` into a `DatabaseError`.
-    ///
-    /// This is useful for converting errors from the SurrealDB library into
-    /// custom errors for the `Database` struct.
-    ///
-    fn from(err: SurrealError) -> DatabaseError {
-        DatabaseError::SurrealError(err)
-    }
-}
 
 impl Database {
     const NAMESPACE: &'static str = "pilum";
@@ -65,9 +46,9 @@ impl Database {
     /// not existing, insufficient permissions or a network error if the database is
     /// remote.
     ///
-    pub async fn initialize() -> Result<SurrealDb, DatabaseError> {
+    pub async fn initialize() -> Result<Surreal<Db>, Error> {
         let mut endpoint = dirs::home_dir()
-            .ok_or(DatabaseError::HomeDirNotFound)?
+            .ok_or(Error::HomeDirNotFound)?
             .join(".pilum")
             .join(Self::DATABASE);
 
@@ -92,7 +73,7 @@ impl Database {
     /// not existing, insufficient permissions or a network error if the database is
     /// remote.
     ///
-    async fn connect(endpoint: PathBuf) -> Result<SurrealDb, DatabaseError> {
+    async fn connect(endpoint: PathBuf) -> Result<Surreal<Db>, Error> {
         let db = Surreal::new::<RocksDb>(endpoint).await?;
         db.use_ns(Self::NAMESPACE).use_db(Self::DATABASE).await?;
         Ok(db)

@@ -14,7 +14,11 @@
 //! The application uses the SurrealDB database for data persistence. The
 //! database is initialized in the `run` function of the `Cli` struct.
 //!
+use pilum::{Cli, Error};
+
 #[tokio::main]
-async fn main() {
-    pilum::Cli::run().await;
+async fn main() -> Result<(), Error> {
+    Cli::run().await?;
+
+    Ok(())
 }

@@ -16,6 +16,21 @@ pub mod database;
 
 use clap::{Parser, Subcommand};
 use database::Database;
+use serde::{Deserialize, Serialize};
+use surrealdb::sql::Thing;
+
+#[derive(Debug)]
+pub enum Error {
+    DatabaseError(surrealdb::Error),
+    HomeDirNotFound,
+    TempDirCreationFailed,
+}
+
+impl From<surrealdb::Error> for Error {
+    fn from(error: surrealdb::Error) -> Error {
+        Error::DatabaseError(error)
+    }
+}
 
 /// The `Commands` enum defines the available commands for the application.
 #[derive(Debug, Subcommand)]
@@ -41,6 +56,17 @@ pub enum Commands {
     List,
     /// Modifies the existing task with provided arguments.
     Modify,
+}
+
+#[derive(Debug, Serialize)]
+pub struct Task {
+    name: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct Record {
+    #[allow(dead_code)]
+    id: Thing,
 }
 
 /// Pilum is a sophisticated task manager with a CLI and a GUI written in Rust.
@@ -79,14 +105,16 @@ impl Cli {
     /// This function is asynchronous because the `Database::initialize` method is
     /// asynchronous.
     ///
-    pub async fn run() {
+    pub async fn run() -> Result<(), Error> {
         let args = Cli::parse();
 
         match args.command {
-            Some(Commands::Add { name }) => add_task(name).await,
+            Some(Commands::Add { name }) => add_task(name).await?,
             None => exit_no_subcommand(),
             _ => exit_unknown_subcommand(),
         }
+
+        Ok(())
     }
 }
 
@@ -111,12 +139,14 @@ impl Cli {
 /// # Safety
 /// The function is safe to call as it does not use any unsafe code.
 ///
-pub async fn add_task(name: String) {
-    let _db = Database::initialize().await;
+pub async fn add_task(_name: String) -> Result<(), Error> {
+    let _db = Database::initialize().await?;
 
-    println!("Created task 1: {name}");
+    dbg!(_db);
 
-    // TODO: Implement the `add_task` function.
+    // TODO: Implement `add_task` function.
+
+    Ok(())
 }
 
 fn exit_no_subcommand() {
