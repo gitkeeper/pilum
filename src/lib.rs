@@ -78,7 +78,7 @@ impl Cli {
     ///
     pub async fn run() {
         let args = Cli::parse();
-        let db = Database::initialize().await.unwrap();
+        let db = Database::new().await.unwrap();
 
         dbg!(db);
 

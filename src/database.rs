@@ -59,7 +59,7 @@ impl Database {
     /// remote.
     ///
     #[cfg(not(test))]
-    pub async fn initialize() -> Result<SurrealDb, DatabaseError> {
+    pub async fn new() -> Result<SurrealDb, DatabaseError> {
         let database = "database";
         let endpoint = dirs::home_dir()
             .ok_or(DatabaseError::HomeDirNotFound)?
@@ -88,7 +88,7 @@ impl Database {
     /// remote.
     ///
     #[cfg(test)]
-    pub async fn initialize() -> Result<SurrealDb, DatabaseError> {
+    pub async fn new() -> Result<SurrealDb, DatabaseError> {
         let database = uuid::Uuid::new_v4().to_string();
         let endpoint = assert_fs::TempDir::new()
             .map_err(|_| DatabaseError::TempDirCreationFailed)?
@@ -109,7 +109,7 @@ mod tests {
     // returned by the `initialize` method is `Ok`.
     #[tokio::test]
     async fn test_database_initialization() {
-        let db = Database::initialize().await;
+        let db = Database::new().await;
         assert!(db.is_ok(), "Database initialization failed.");
     }
 }
