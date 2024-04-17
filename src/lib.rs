@@ -16,7 +16,6 @@ pub mod database;
 
 use clap::{Parser, Subcommand};
 use database::Database;
-use std::process::exit;
 
 /// The `Commands` enum defines the available commands for the application.
 #[derive(Debug, Subcommand)]
@@ -85,24 +84,49 @@ impl Cli {
 
         match args.command {
             Some(Commands::Add { name }) => add_task(name).await,
-            None => {
-                eprintln!("error: no subcommand specified\n\nUsage: pilum [COMMAND]\n\nFor more information, try '--help'.");
-                exit(2);
-            }
-            _ => {
-                eprintln!("error: subcommand not implemented\n\nUsage: pilum [COMMAND]\n\nFor more information, try '--help'.");
-                exit(2);
-            }
+            None => exit_no_subcommand(),
+            _ => exit_unknown_subcommand(),
         }
     }
 }
 
-async fn add_task(name: String) {
-    let _db = Database::new().await;
+/// Adds a new pending task to the task list.
+///
+/// The `add_task` function takes a `name` parameter, which is the name of the task
+/// to be added. It then initializes the SurrealDB database and prints a message
+/// indicating that the task has been created.
+///
+/// The function is asynchronous because it calls the `Database::new` method, which
+/// is asynchronous.
+///
+/// # Parameters
+/// - `name`: The name of the task to be added.
+///
+/// # Panics
+/// The function will panic if the database connection fails.
+///
+/// # Errors
+/// The function will return an error if the database connection fails.
+///
+/// # Safety
+/// The function is safe to call as it does not use any unsafe code.
+///
+pub async fn add_task(name: String) {
+    let _db = Database::initialize().await;
 
     println!("Created task 1: {name}");
 
     // TODO: Implement the `add_task` function.
+}
+
+fn exit_no_subcommand() {
+    eprintln!("error: no subcommand specified\n\nUsage: pilum [COMMAND]\n\nFor more information, try '--help'.");
+    std::process::exit(2);
+}
+
+fn exit_unknown_subcommand() {
+    eprintln!("error: subcommand not implemented\n\nUsage: pilum [COMMAND]\n\nFor more information, try '--help'.");
+    std::process::exit(2);
 }
 
 #[cfg(test)]

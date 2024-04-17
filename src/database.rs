@@ -13,6 +13,7 @@
 //! uses the `dirs` crate to get the home directory and appends the default
 //! directory to it.
 //!
+use std::path::PathBuf;
 use surrealdb::engine::local::RocksDb;
 use surrealdb::Surreal;
 
@@ -33,6 +34,11 @@ pub enum DatabaseError {
 }
 
 impl From<SurrealError> for DatabaseError {
+    /// Converts a `SurrealError` into a `DatabaseError`.
+    ///
+    /// This is useful for converting errors from the SurrealDB library into
+    /// custom errors for the `Database` struct.
+    ///
     fn from(err: SurrealError) -> DatabaseError {
         DatabaseError::SurrealError(err)
     }
@@ -59,19 +65,19 @@ impl Database {
     /// not existing, insufficient permissions or a network error if the database is
     /// remote.
     ///
-    pub async fn new() -> Result<SurrealDb, DatabaseError> {
-        let endpoint;
+    pub async fn initialize() -> Result<SurrealDb, DatabaseError> {
+        let mut endpoint = dirs::home_dir()
+            .ok_or(DatabaseError::HomeDirNotFound)?
+            .join(".pilum")
+            .join(Self::DATABASE);
 
-        if std::env::var("PILUM_TEST_MODE").is_ok() {
-            endpoint = std::env::temp_dir().join(Self::DATABASE);
-        } else {
-            endpoint = dirs::home_dir()
-                .ok_or(DatabaseError::HomeDirNotFound)?
-                .join(".pilum")
+        if std::env::var("PILUM_MODE").is_ok_and(|m| m == "test") {
+            endpoint = std::env::temp_dir()
+                .join(uuid::Uuid::new_v4().to_string())
                 .join(Self::DATABASE);
-        };
+        }
 
-        Self::connect(endpoint).await.map_err(|e| e.into())
+        Self::connect(endpoint).await
     }
 
     /// Connects to the SurrealDB database at the specified endpoint. The endpoint
@@ -86,7 +92,7 @@ impl Database {
     /// not existing, insufficient permissions or a network error if the database is
     /// remote.
     ///
-    async fn connect(endpoint: std::path::PathBuf) -> Result<SurrealDb, DatabaseError> {
+    async fn connect(endpoint: PathBuf) -> Result<SurrealDb, DatabaseError> {
         let db = Surreal::new::<RocksDb>(endpoint).await?;
         db.use_ns(Self::NAMESPACE).use_db(Self::DATABASE).await?;
         Ok(db)
@@ -103,7 +109,8 @@ mod tests {
     // returned by the `initialize` method is `Ok`.
     #[tokio::test]
     async fn test_database_initialization() {
-        let db = Database::new().await;
+        std::env::set_var("PILUM_MODE", "test");
+        let db = Database::initialize().await;
         assert!(db.is_ok(), "Database initialization failed.");
     }
 }
