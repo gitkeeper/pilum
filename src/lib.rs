@@ -16,6 +16,7 @@ pub mod database;
 
 use clap::{Parser, Subcommand};
 use database::Database;
+use std::process::exit;
 
 /// The `Commands` enum defines the available commands for the application.
 #[derive(Debug, Subcommand)]
@@ -23,7 +24,10 @@ pub enum Commands {
     /// Shows active tasks.
     Active,
     /// Adds a new pending task to the task list.
-    Add,
+    Add {
+        /// The name of the task.
+        name: String,
+    },
     /// Shows all tasks.
     All,
     /// Shows completed tasks.
@@ -78,14 +82,27 @@ impl Cli {
     ///
     pub async fn run() {
         let args = Cli::parse();
-        let db = Database::new().await.unwrap();
 
-        dbg!(db);
-
-        if let Some(cmd) = &args.command {
-            println!("Command: {:?}", cmd);
+        match args.command {
+            Some(Commands::Add { name }) => add_task(name).await,
+            None => {
+                eprintln!("error: no subcommand specified\n\nUsage: pilum [COMMAND]\n\nFor more information, try '--help'.");
+                exit(2);
+            }
+            _ => {
+                eprintln!("error: subcommand not implemented\n\nUsage: pilum [COMMAND]\n\nFor more information, try '--help'.");
+                exit(2);
+            }
         }
     }
+}
+
+async fn add_task(name: String) {
+    let _db = Database::new().await;
+
+    println!("Created task 1: {name}");
+
+    // TODO: Implement the `add_task` function.
 }
 
 #[cfg(test)]

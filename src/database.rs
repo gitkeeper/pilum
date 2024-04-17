@@ -40,12 +40,13 @@ impl From<SurrealError> for DatabaseError {
 
 impl Database {
     const NAMESPACE: &'static str = "pilum";
+    const DATABASE: &'static str = "database";
 
     /// Initializes a new instance of the `Database` struct and connects to the
-    /// SurrealDB production database. It uses the `NAMESPACE` constant to specify
-    /// the namespace for SurrealDB to use. The database name is a constant string
-    /// that is used for the production database. The endpoint is the user's home
-    /// directory for the database file inside a hidden directory called .pilum.
+    /// SurrealDB production database. It uses the `NAMESPACE` and `DATABASE`
+    /// constant to specify the namespace and database for SurrealDB to use.
+    /// In normal mode, the database resides is the user's home directory inside a
+    /// hidden directory called `.pilum`.
     ///
     /// The function returns a `Result` that contains the `SurrealDb` instance if
     /// the database connection is successful, or a `SurrealError` if the connection
@@ -58,27 +59,25 @@ impl Database {
     /// not existing, insufficient permissions or a network error if the database is
     /// remote.
     ///
-    #[cfg(not(test))]
     pub async fn new() -> Result<SurrealDb, DatabaseError> {
-        let database = "database";
-        let endpoint = dirs::home_dir()
-            .ok_or(DatabaseError::HomeDirNotFound)?
-            .join(".pilum")
-            .join(database);
-        let db = Surreal::new::<RocksDb>(endpoint).await?;
-        db.use_ns(Self::NAMESPACE).use_db(database).await?;
-        Ok(db)
+        let endpoint;
+
+        if std::env::var("PILUM_TEST_MODE").is_ok() {
+            endpoint = std::env::temp_dir().join(Self::DATABASE);
+        } else {
+            endpoint = dirs::home_dir()
+                .ok_or(DatabaseError::HomeDirNotFound)?
+                .join(".pilum")
+                .join(Self::DATABASE);
+        };
+
+        Self::connect(endpoint).await.map_err(|e| e.into())
     }
 
-    /// Initializes a new instance of the `Database` struct and connects to the
-    /// SurrealDB test database. It uses the `NAMESPACE` constant to specify
-    /// the namespace for SurrealDB to use. The database name is a UUID that is
-    /// generated for each test run. The endpoint is a temporary directory that
-    /// is created for the test database.
-    ///
-    /// The function returns a `Result` that contains the `SurrealDb` instance if
-    /// the database connection is successful, or a `SurrealError` if the connection
-    /// fails.
+    /// Connects to the SurrealDB database at the specified endpoint. The endpoint
+    /// is the path to the database file. The function returns a `Result` that
+    /// contains the `SurrealDb` instance if the connection is successful, or a
+    /// `SurrealError` if the connection fails.
     ///
     /// # Errors
     ///
@@ -87,14 +86,9 @@ impl Database {
     /// not existing, insufficient permissions or a network error if the database is
     /// remote.
     ///
-    #[cfg(test)]
-    pub async fn new() -> Result<SurrealDb, DatabaseError> {
-        let database = uuid::Uuid::new_v4().to_string();
-        let endpoint = assert_fs::TempDir::new()
-            .map_err(|_| DatabaseError::TempDirCreationFailed)?
-            .join(&database);
+    async fn connect(endpoint: std::path::PathBuf) -> Result<SurrealDb, DatabaseError> {
         let db = Surreal::new::<RocksDb>(endpoint).await?;
-        db.use_ns(Self::NAMESPACE).use_db(database).await?;
+        db.use_ns(Self::NAMESPACE).use_db(Self::DATABASE).await?;
         Ok(db)
     }
 }
