@@ -9,6 +9,8 @@
 //! commands based on these definitions.
 //!
 #[test]
-fn cli_tests() {
-    trycmd::TestCases::new().case("tests/commands/*.md");
+fn commands() {
+    trycmd::TestCases::new()
+        .env("PILUM_MODE", "test")
+        .case("tests/commands/*.md");
 }

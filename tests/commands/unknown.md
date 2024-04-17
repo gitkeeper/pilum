@@ -12,3 +12,16 @@ Usage: pilum [COMMAND]
 For more information, try '--help'.
 
 ```
+
+`pilum` supplies no command whatsoever and therefore returns an error with exitcode `2`:
+
+```console
+$ pilum
+? 2
+error: no subcommand specified
+
+Usage: pilum [COMMAND]
+
+For more information, try '--help'.
+
+```
