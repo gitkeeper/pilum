@@ -1,4 +1,8 @@
-//! TODO: Add comment
+//! The `cli` module contains the command-line interface for the application.
+//!
+//! The `Cli` struct is responsible for parsing command-line arguments and
+//! executing the corresponding commands. It uses the `Commands` enum to define
+//! the available commands for the application.
 //!
 use crate::error::Error;
 
