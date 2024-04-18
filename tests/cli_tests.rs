@@ -8,9 +8,13 @@
 //! reads these `.md` files and the CLI tests will appraise different sets of
 //! commands based on these definitions.
 //!
-#[test]
-fn commands() {
+use pilum::database::Database;
+
+#[tokio::test]
+async fn commands() {
     trycmd::TestCases::new()
         .env("PILUM_MODE", "test")
         .case("tests/commands/*.md");
+
+    Database::cleanup_test().expect("Testing cleanup failed.");
 }

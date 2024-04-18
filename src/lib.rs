@@ -5,19 +5,21 @@
 //! The `lib.rs` file contains the main structures and logic of the application.
 //! It includes the `Cli` struct which is responsible for parsing command-line
 //! arguments and executing the corresponding commands. It also includes the
-//! `Commands` enum which defines the available commands for the application.
+//! `Commands` enum which defines the available commands for the application as
+//! well as their actual implementations.
 //!
-//! The `Database` module is also imported in this file. It uses the SurrealDB
+//! The `Database` module is imported in this file. It uses the SurrealDB
 //! database for data persistence. The `Database` struct is used to initialize
 //! and interact with the SurrealDB database. It must be used inside an
-//! asynchronous context due to its asynchronous nature.
+//! asynchronous functions and methods due to its asynchronous nature.
 //!
 pub mod database;
 
 use clap::{Parser, Subcommand};
 use database::Database;
 use serde::{Deserialize, Serialize};
-use surrealdb::sql::Thing;
+use surrealdb::engine::local::Db;
+use surrealdb::Surreal;
 
 #[derive(Debug)]
 pub enum Error {
@@ -58,15 +60,10 @@ pub enum Commands {
     Modify,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Task {
+    number: i64,
     name: String,
-}
-
-#[derive(Debug, Deserialize)]
-struct Record {
-    #[allow(dead_code)]
-    id: Thing,
 }
 
 /// Pilum is a sophisticated task manager with a CLI and a GUI written in Rust.
@@ -95,15 +92,16 @@ impl Cli {
     /// The `run` function is the main entry point for the application.
     ///
     /// It first parses the command-line arguments using the `Cli::parse` method.
-    /// Then, it initializes the SurrealDB database by calling the
-    /// `Database::initialize` method.
-    ///
     /// If the database initialization is successful, it proceeds to check if a
     /// command was provided through the command-line arguments. If a command is
     /// found, it executes the command.
     ///
-    /// This function is asynchronous because the `Database::initialize` method is
+    /// This function is asynchronous because the commands themselves are
     /// asynchronous.
+    ///
+    /// # Errors
+    ///
+    /// The function will return an error if the database connection fails.
     ///
     pub async fn run() -> Result<(), Error> {
         let args = Cli::parse();
@@ -136,24 +134,52 @@ impl Cli {
 /// # Errors
 /// The function will return an error if the database connection fails.
 ///
-/// # Safety
-/// The function is safe to call as it does not use any unsafe code.
-///
-pub async fn add_task(_name: String) -> Result<(), Error> {
-    let _db = Database::initialize().await?;
+pub async fn add_task(name: String) -> Result<(), Error> {
+    let db = Database::initialize().await?;
 
-    dbg!(_db);
+    let number = next_task_number(&db).await?;
+    let created: Vec<Task> = db.create("tasks").content(Task { number, name }).await?;
+    let task = created.first().unwrap();
 
-    // TODO: Implement `add_task` function.
+    println!("Created task {}: {}", task.number, task.name);
 
     Ok(())
 }
 
+/// Gets the next task number.
+///
+/// The `next_task_number` function takes a reference to the SurrealDB database
+/// and returns the next task number to be used. It queries the database for the
+/// existing tasks, finds the maximum task number, and increments it by one to
+/// get the next task number.
+///
+/// # Parameters
+///
+/// - `db`: A reference to the SurrealDB database.
+///
+/// # Returns
+///
+/// The function returns the next task number to be used.
+///
+/// # Errors
+///
+/// The function will return an error if the database query fails.
+///
+async fn next_task_number(db: &Surreal<Db>) -> Result<i64, Error> {
+    let selected: Vec<Task> = db.select("tasks").await?;
+    let next_number = selected.iter().map(|t| t.number).max().unwrap_or(0) + 1;
+    Ok(next_number)
+}
+
+/// Exits the program with an error message if no subcommand is provided.
+/// The program exits with a status code of 2 according to `clap`s behaviour.
 fn exit_no_subcommand() {
     eprintln!("error: no subcommand specified\n\nUsage: pilum [COMMAND]\n\nFor more information, try '--help'.");
     std::process::exit(2);
 }
 
+/// Exits the program with an error message if an unknown subcommand is provided.
+/// The program exits with a status code of 2 according to `clap`s behaviour.
 fn exit_unknown_subcommand() {
     eprintln!("error: subcommand not implemented\n\nUsage: pilum [COMMAND]\n\nFor more information, try '--help'.");
     std::process::exit(2);
