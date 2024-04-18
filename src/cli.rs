@@ -5,8 +5,8 @@
 //! the available commands for the application.
 //!
 use crate::error::Error;
-
 use crate::*;
+
 use clap::{Parser, Subcommand};
 
 /// The `Commands` enum defines the available commands for the application.

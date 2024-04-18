@@ -11,7 +11,7 @@
 //! and the source of the error.
 //!
 
-/// Error type for the application.
+/// Error types for the application.
 #[derive(Debug)]
 pub enum Error {
     DatabaseError(surrealdb::Error),

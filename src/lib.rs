@@ -17,9 +17,9 @@ pub mod cli;
 pub mod database;
 pub mod error;
 
+use crate::database::Database;
 use crate::error::Error;
 
-use database::Database;
 use serde::{Deserialize, Serialize};
 use surrealdb::engine::local::Db;
 use surrealdb::Surreal;
