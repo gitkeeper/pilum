@@ -29,13 +29,17 @@ You must have [Rust](https://www.rust-lang.org/) installed on your machine. To i
 recommended to follow [Rust's installation instructions](https://www.rust-lang.org/tools/install)
 for your .
 
-Afterwards, you can install this package by running `cargo install pilum`.
+Afterward, you can install this package by running `cargo install pilum`.
 
 ## Usage
 
 Pilum's command-line interface is invoked with the following pattern:
 
 `pilum <filter> <command> [ <mods> | <args> ]`
+
+The following commands are available as of now:
+
+- `add <task name>`
 
 ## Development
 

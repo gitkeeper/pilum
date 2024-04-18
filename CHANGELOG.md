@@ -9,18 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added a library called `lib.rs` to extract the application's logic from `main.rs` to.
-- Restructured the code base into modules: `cli.rs`, `database.rs` and `error.rs`.
-- Errors propagate from the Database through the modules up to `main.rs`.
-- Giving an unknown or no subcommand at all throws an error similar to `clap`'s errors.
-- Ensured that the environment variable `PILUM_MODE=test` puts the application in test mode.
-- Introduced `trycmd` to enumerate test case files and run them to verify the command's results.
-- Added test case files for the command `help`, `add` and `unknown` commands.
-- `trycmd`'s TestCases function first deletes all test files and databases before running.
+- None
 
 ### Changed
 
-- Elaborated comments for modules, associated functions and methods to give more information.
+- None
 
 ### Deprecated
 
@@ -32,11 +25,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Made some minor adjustments to the [README.md](README.md) to reflect the application's purpose.
+- None
 
 ### Security
 
 - None
+
+## [0.2.0] - 2024-04-18
+
+### Added
+
+- Added a library called `lib.rs` to extract the application's logic from `main.rs` to.
+- Restructured the code base into modules: [cli.rs](src/cli.rs), [database.rs](src/database.rs)
+  and [error.rs](src/error.rs).
+- Errors propagate from the Database through the modules up to `main.rs`.
+- Giving an unknown or no subcommand at all throws an error similar to `clap`'s errors.
+- Ensured that the environment variable `PILUM_MODE=test` puts the application in test mode.
+- Introduced `trycmd` to enumerate test case files and run them to verify the command's results.
+- Added test case files for the command `help`, `add` and `unknown` commands.
+- `trycmd`'s TestCases function first deletes all test files and databases before running.
+
+### Changed
+
+- Elaborated comments for modules, associated functions and methods to give more information.
+
+### Fixed
+
+- Made some minor adjustments to the [README.md](README.md) to reflect the application's purpose.
 
 ## [0.1.0] - 2024-04-03
 
