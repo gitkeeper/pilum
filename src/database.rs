@@ -13,7 +13,7 @@
 //! uses the `dirs` crate to get the home directory and appends the default
 //! directory to it.
 //!
-use crate::Error;
+use crate::error::Error;
 
 use std::path::PathBuf;
 use surrealdb::engine::local::{Db, RocksDb};

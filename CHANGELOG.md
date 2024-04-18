@@ -10,12 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a library called `lib.rs` to extract the application's logic from `main.rs` to.
+- Restructured the code base into modules: `cli.rs`, `database.rs` and `error.rs`.
+- Errors propagate from the Database through the modules up to `main.rs`.
+- Giving an unknown or no subcommand at all throws an error similar to `clap`'s errors.
+- Ensured that the environment variable `PILUM_MODE=test` puts the application in test mode.
 - Introduced `trycmd` to enumerate test case files and run them to verify the command's results.
-- Added a test case file for the command `help` and the options `--help` and `-h`.
+- Added test case files for the command `help`, `add` and `unknown` commands.
+- `trycmd`'s TestCases function first deletes all test files and databases before running.
 
 ### Changed
 
-- Made some minor adjustments to the [README.md](README.md) to reflect the application's purpose.
+- Elaborated comments for modules, associated functions and methods to give more information.
 
 ### Deprecated
 
@@ -27,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- None
+- Made some minor adjustments to the [README.md](README.md) to reflect the application's purpose.
 
 ### Security
 
@@ -36,10 +41,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2024-04-03
 
 ### Added
-    
+
 - Founded a new binary package with [Cargo](https://doc.rust-lang.org/cargo/).
 - Created an initial folder structure with help of `.gitkeep`.
-- Set up [Cargo.toml](Cargo.toml) with initial metadata for this package. 
+- Set up [Cargo.toml](Cargo.toml) with initial metadata for this package.
 - Introduced [clap](https://github.com/clap-rs/clap) to be the command-line parser for the package.
 - Wrote the starting [README.md](README.md) with some placeholder paragraphs for now.
 - Prepared a [CHANGELOG.md](CHANGELOG.md) that is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).

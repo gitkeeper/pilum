@@ -12,9 +12,9 @@ use pilum::database::Database;
 
 #[tokio::test]
 async fn commands() {
+    Database::cleanup_test().expect("Testing cleanup failed.");
+
     trycmd::TestCases::new()
         .env("PILUM_MODE", "test")
         .case("tests/commands/*.md");
-
-    Database::cleanup_test().expect("Testing cleanup failed.");
 }
