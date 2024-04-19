@@ -1,4 +1,4 @@
-# Test Command: Unknown
+# Use Case: Errors
 
 `pilum unknown` is an unknown command and therefore returns an error with exitcode `2`:
 

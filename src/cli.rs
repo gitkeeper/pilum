@@ -16,8 +16,8 @@ pub enum Commands {
     Active,
     /// Adds a new pending task to the task list.
     Add {
-        /// The name of the task.
-        name: String,
+        /// The name or multiple names for tasks to add.
+        names: Vec<String>,
     },
     /// Shows all tasks.
     All,
@@ -76,7 +76,8 @@ impl Cli {
         let args = Cli::parse();
 
         match args.command {
-            Some(Commands::Add { name }) => add_task(name).await?,
+            Some(Commands::Add { names }) => add_task(names).await?,
+            Some(Commands::All) => list_all_tasks().await?,
             None => exit_no_subcommand(),
             _ => exit_unknown_subcommand(),
         }

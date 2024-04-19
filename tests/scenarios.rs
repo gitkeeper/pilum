@@ -1,20 +1,19 @@
-//! # CLI Tests
+//! # Scenarios
 //!
-//! This is a test operation for the application's command-line interface (CLI).
+//! These are test scenarios for the application's command-line interface (CLI).
 //!
 //! `trycmd::TestCases::new()` creates a new set of test cases. Each `.case()`
 //! method appends a new test case. The paths in the arguments represent test
 //! files which contain the definition of each test case. The library `trycmd`
-//! reads these `.md` files and the CLI tests will appraise different sets of
-//! commands based on these definitions.
+//! reads these `.md` files and evaluates the results for their correctness.
 //!
 use pilum::database::Database;
 
-#[tokio::test]
-async fn commands() {
+#[test]
+fn scenarios() {
     Database::cleanup_test().expect("Testing cleanup failed.");
 
     trycmd::TestCases::new()
         .env("PILUM_MODE", "test")
-        .case("tests/commands/*.md");
+        .case("tests/scenarios/cake.md");
 }

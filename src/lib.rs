@@ -24,7 +24,7 @@ use serde::{Deserialize, Serialize};
 use surrealdb::engine::local::Db;
 use surrealdb::Surreal;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Task {
     number: i64,
     name: String,
@@ -48,14 +48,16 @@ pub struct Task {
 /// # Errors
 /// The function will return an error if the database connection fails.
 ///
-pub async fn add_task(name: String) -> Result<(), Error> {
+pub async fn add_task(names: Vec<String>) -> Result<(), Error> {
     let db = Database::initialize().await?;
 
-    let number = next_task_number(&db).await?;
-    let created: Vec<Task> = db.create("tasks").content(Task { number, name }).await?;
-    let task = created.first().unwrap();
+    for name in names {
+        let number = next_task_number(&db).await?;
+        let created: Vec<Task> = db.create("tasks").content(Task { number, name }).await?;
+        let task = created.first().unwrap();
 
-    println!("Created task {}: {}", task.number, task.name);
+        println!("Created task {}: {}", task.number, task.name);
+    }
 
     Ok(())
 }
@@ -83,4 +85,38 @@ async fn next_task_number(db: &Surreal<Db>) -> Result<i64, Error> {
     let tasks: Vec<Task> = db.select("tasks").await?;
     let next_number = tasks.iter().map(|t| t.number).max().unwrap_or(0) + 1;
     Ok(next_number)
+}
+
+/// Lists all the tasks in the task list.
+///
+/// The `list_all_tasks` function initializes the SurrealDB database and queries
+/// the database for all the tasks. It then prints the task number and name for
+/// each task found in the database.
+///
+/// # Parameters
+///
+/// There are no parameters for this function.
+///
+/// # Returns
+///
+/// The function returns `Ok(())` if the operation is successful.
+///
+/// # Errors
+///
+/// The function will return an error if the database query fails.
+///
+async fn list_all_tasks() -> Result<(), Error> {
+    let db = Database::initialize().await?;
+    let mut response = db.query("SELECT * FROM tasks ORDER BY number ASC").await?;
+    let tasks: Vec<Task> = response.take(0)?;
+
+    if tasks.is_empty() {
+        println!("No tasks found.");
+    } else {
+        for task in tasks {
+            println!("{}: {}", task.number, task.name);
+        }
+    }
+
+    Ok(())
 }
