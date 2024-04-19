@@ -42,11 +42,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the [README.md](README.md) to reflect the new command `all`.
 - Improved module imports to be me logical: absolute paths (`use crate::`) for internal modules,
   external packages come after in their own block.
+- Restructured the integration tests to work as scenarios that represent use cases.
+- Misc integration tests now reside in their own test folder.
 
 ### Fixed
 
-- Fixed the test runner so that it deploys the database inside a `tmp`
-- directory in project root, which is also compatbile for GitHub's actions.
+- Fixed the test runner so that it deploys the database inside a `tmp` directory in project root,
+  which is also compatible for GitHub's actions.
 
 ### Removed
 
