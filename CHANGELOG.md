@@ -31,6 +31,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
+## [0.2.1] - 2024-04-18
+
+### Added
+
+- Added the command `all` to display all tasks.
+
+### Changed
+
+- Updated the [README.md](README.md) to reflect the new command `all`.
+- Improved module imports to be me logical: absolute paths (`use crate::`) for internal modules,
+  external packages come after in their own block.
+
+### Fixed
+
+- Fixed the test runner so that it deploys the database inside a `tmp`
+- directory in project root, which is also compatbile for GitHub's actions.
+
+### Removed
+
+- Removed the setting `TMPDIR: ${{ runner.temp }}` in the [GitHub workflow](.github/workflows/rust.yml).
+
 ## [0.2.0] - 2024-04-18
 
 ### Added

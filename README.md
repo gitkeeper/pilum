@@ -39,7 +39,8 @@ Pilum's command-line interface is invoked with the following pattern:
 
 The following commands are available as of now:
 
-- `add <task name>`
+- `pilum add <task name>`
+- `pilum all`
 
 ## Development
 

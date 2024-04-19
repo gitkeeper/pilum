@@ -2190,7 +2190,7 @@ checksum = "5be167a7af36ee22fe3115051bc51f6e6c7054c9348e28deb4f49bd6f705a315"
 
 [[package]]
 name = "pilum"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "assert_cmd",
  "assert_fs",
@@ -2822,9 +2822,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.21.10"
+version = "0.21.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9d5a6813c0759e4609cd494e8e725babae6a2ca7b62a5536a13daaec6fcb7ba"
+checksum = "7fecbfb7b1444f477b345853b1fce097a2c6fb637b2bfb87e6bc5db0f043fae4"
 dependencies = [
  "log",
  "ring 0.17.8",
@@ -3299,7 +3299,7 @@ dependencies = [
  "semver",
  "serde",
  "serde_json",
- "surrealdb-core 1.4.0",
+ "surrealdb-core 1.4.1",
  "surrealdb-core 2.0.0-1.4.0",
  "thiserror",
  "tokio",
@@ -3315,9 +3315,9 @@ dependencies = [
 
 [[package]]
 name = "surrealdb-core"
-version = "1.4.0"
+version = "1.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a16fc8b784a23ddedddf4086005ee054d916a1ee1ef3c5e1f45793cc5f8fed1d"
+checksum = "91a917d727e53e2d20ca93ad00b63020a1cc38857129ffcb163c19590e5f442f"
 dependencies = [
  "addr",
  "any_ascii",
@@ -3750,9 +3750,9 @@ dependencies = [
 
 [[package]]
 name = "toml_edit"
-version = "0.22.9"
+version = "0.22.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e40bb779c5187258fd7aad0eb68cb8706a0a81fa712fbea808ab43c4b8374c4"
+checksum = "d3328d4f68a705b2a4498da1d580585d39a6510f98318a2cec3018a7ec61ddef"
 dependencies = [
  "indexmap 2.2.6",
  "serde",
@@ -3828,7 +3828,7 @@ dependencies = [
  "serde",
  "shlex",
  "snapbox",
- "toml_edit 0.22.9",
+ "toml_edit 0.22.12",
 ]
 
 [[package]]
