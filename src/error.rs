@@ -15,8 +15,6 @@
 #[derive(Debug)]
 pub enum Error {
     DatabaseError(surrealdb::Error),
-    HomeDirNotFound,
-    TempDirCreationFailed,
 }
 
 impl From<surrealdb::Error> for Error {

@@ -56,7 +56,7 @@ impl Database {
     /// database directory using `Database::cleanup()`.
     ///
     pub async fn initialize() -> Result<Surreal<Db>, Error> {
-        let mut endpoint = Self::namespace_production()?.join(Self::DATABASE);
+        let mut endpoint = Self::namespace_production().join(Self::DATABASE);
 
         if std::env::var("PILUM_MODE").is_ok_and(|m| m == "test") {
             endpoint = Self::namespace_test().join(Self::DATABASE);
@@ -89,7 +89,10 @@ impl Database {
     /// deletes the whole application directory in production!
     ///
     pub fn cleanup_production() -> std::io::Result<()> {
-        std::fs::remove_dir_all(Self::namespace_production().unwrap())
+        if Self::namespace_production().exists() {
+            std::fs::remove_dir_all(Self::namespace_production())?
+        }
+        Ok(())
     }
 
     /// Removes the test database directory.
@@ -98,19 +101,24 @@ impl Database {
     /// used after running the tests to clean up the test database.
     ///
     pub fn cleanup_test() -> std::io::Result<()> {
-        std::fs::remove_dir_all(Self::namespace_test())
+        if Self::namespace_test().exists() {
+            std::fs::remove_dir_all(Self::namespace_test())?
+        }
+        Ok(())
     }
 
     /// Returns the path where the production database resides in.
-    fn namespace_production() -> Result<PathBuf, Error> {
-        let namespace = dirs::home_dir()
-            .ok_or(Error::HomeDirNotFound)?
-            .join(format!(".{}", Self::NAMESPACE));
-        Ok(namespace)
+    fn namespace_production() -> PathBuf {
+        dirs::home_dir()
+            .unwrap()
+            .join(format!(".{}", Self::NAMESPACE))
     }
 
     /// Returns the path where the test database resides in.
     fn namespace_test() -> PathBuf {
-        std::env::temp_dir().join(Self::NAMESPACE)
+        std::env::current_dir()
+            .unwrap()
+            .join("tmp")
+            .join(Self::NAMESPACE)
     }
 }
