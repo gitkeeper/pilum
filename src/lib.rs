@@ -15,14 +15,15 @@
 //!
 pub mod cli;
 pub mod database;
-pub mod error;
 
 use crate::database::Database;
-use crate::error::Error;
 
 use serde::{Deserialize, Serialize};
 use surrealdb::engine::local::Db;
 use surrealdb::Surreal;
+
+pub type Result<T> = std::result::Result<T, Error>;
+pub type Error = Box<dyn std::error::Error>;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Task {
@@ -48,7 +49,7 @@ pub struct Task {
 /// # Errors
 /// The function will return an error if the database connection fails.
 ///
-pub async fn add_task(names: Vec<String>) -> Result<(), Error> {
+pub async fn add_task(names: Vec<String>) -> Result<()> {
     let db = Database::initialize().await?;
 
     for name in names {
@@ -81,7 +82,7 @@ pub async fn add_task(names: Vec<String>) -> Result<(), Error> {
 ///
 /// The function will return an error if the database query fails.
 ///
-async fn next_task_number(db: &Surreal<Db>) -> Result<i64, Error> {
+async fn next_task_number(db: &Surreal<Db>) -> Result<i64> {
     let tasks: Vec<Task> = db.select("tasks").await?;
     let next_number = tasks.iter().map(|t| t.number).max().unwrap_or(0) + 1;
     Ok(next_number)
@@ -105,7 +106,7 @@ async fn next_task_number(db: &Surreal<Db>) -> Result<i64, Error> {
 ///
 /// The function will return an error if the database query fails.
 ///
-async fn list_all_tasks() -> Result<(), Error> {
+async fn list_all_tasks() -> Result<()> {
     let db = Database::initialize().await?;
     let mut response = db.query("SELECT * FROM tasks ORDER BY number ASC").await?;
     let tasks: Vec<Task> = response.take(0)?;

@@ -4,7 +4,6 @@
 //! executing the corresponding commands. It uses the `Commands` enum to define
 //! the available commands for the application.
 //!
-use crate::error::Error;
 use crate::*;
 
 use clap::{Parser, Subcommand};
@@ -72,7 +71,7 @@ impl Cli {
     ///
     /// The function will return an error if the database connection fails.
     ///
-    pub async fn run() -> Result<(), Error> {
+    pub async fn run() -> Result<()> {
         let args = Cli::parse();
 
         match args.command {

@@ -15,10 +15,9 @@
 //! database is initialized in the `run` function of the `Cli` struct.
 //!
 use pilum::cli::Cli;
-use pilum::error::Error;
 
 #[tokio::main]
-async fn main() -> Result<(), Error> {
+async fn main() -> pilum::Result<()> {
     Cli::run().await?;
     Ok(())
 }

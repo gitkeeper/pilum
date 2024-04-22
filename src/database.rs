@@ -13,7 +13,7 @@
 //! uses the `dirs` crate to get the home directory and appends the default
 //! directory to it.
 //!
-use crate::error::Error;
+use super::Result;
 
 use std::path::PathBuf;
 use surrealdb::engine::local::{Db, RocksDb};
@@ -55,7 +55,7 @@ impl Database {
     /// the tests have been run. Alternatively, you can also remove the production
     /// database directory using `Database::cleanup()`.
     ///
-    pub async fn initialize() -> Result<Surreal<Db>, Error> {
+    pub async fn initialize() -> Result<Surreal<Db>> {
         let mut endpoint = Self::namespace_production().join(Self::DATABASE);
 
         if std::env::var("PILUM_MODE").is_ok_and(|m| m == "test") {
@@ -77,7 +77,7 @@ impl Database {
     /// fails. This could be due to a variety of reasons, such as the database file
     /// not existing, database lock or a network error if the database is remote.
     ///
-    async fn connect(endpoint: PathBuf) -> Result<Surreal<Db>, Error> {
+    async fn connect(endpoint: PathBuf) -> Result<Surreal<Db>> {
         let db = Surreal::new::<RocksDb>(endpoint).await?;
         db.use_ns(Self::NAMESPACE).use_db(Self::DATABASE).await?;
         Ok(db)

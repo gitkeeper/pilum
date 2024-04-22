@@ -21,7 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- None
+- Removed the error module for now and simplified error handling in general by introducing a
+  custom Result and Error type for the whole library.
 
 ### Fixed
 
@@ -60,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a library called `lib.rs` to extract the application's logic from `main.rs` to.
 - Restructured the code base into modules: [cli.rs](src/cli.rs), [database.rs](src/database.rs)
-  and [error.rs](src/error.rs).
+  and `error.rs` (deprecated after [0.2.1](#021---2024-04-18)).
 - Errors propagate from the Database through the modules up to `main.rs`.
 - Giving an unknown or no subcommand at all throws an error similar to `clap`'s errors.
 - Ensured that the environment variable `PILUM_MODE=test` puts the application in test mode.
