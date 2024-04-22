@@ -4,8 +4,8 @@
 //! executing the corresponding commands. It uses the `Commands` enum to define
 //! the available commands for the application.
 //!
-use crate::*;
-
+use crate::database::Database;
+use crate::{command::*, Result};
 use clap::{Parser, Subcommand};
 
 /// The `Commands` enum defines the available commands for the application.
@@ -73,10 +73,11 @@ impl Cli {
     ///
     pub async fn run() -> Result<()> {
         let args = Cli::parse();
+        let db = Database::initialize().await?;
 
         match args.command {
-            Some(Commands::Add { names }) => add_task(names).await?,
-            Some(Commands::All) => list_all_tasks().await?,
+            Some(Commands::Add { names }) => add_task(&db, names).await?,
+            Some(Commands::All) => list_all_tasks(&db).await?,
             None => exit_no_subcommand(),
             _ => exit_unknown_subcommand(),
         }

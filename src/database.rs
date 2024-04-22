@@ -13,11 +13,13 @@
 //! uses the `dirs` crate to get the home directory and appends the default
 //! directory to it.
 //!
-use super::Result;
+use crate::Result;
 
 use std::path::PathBuf;
-use surrealdb::engine::local::{Db, RocksDb};
-use surrealdb::Surreal;
+use surrealdb::{
+    engine::local::{Db, RocksDb},
+    Surreal,
+};
 
 /// The `Database` struct provides a way to interact with the SurrealDB database.
 /// It does not hold any data itself, but provides methods for initializing and
@@ -56,10 +58,10 @@ impl Database {
     /// database directory using `Database::cleanup()`.
     ///
     pub async fn initialize() -> Result<Surreal<Db>> {
-        let mut endpoint = Self::namespace_production().join(Self::DATABASE);
+        let mut endpoint = Self::namespace_production()?.join(Self::DATABASE);
 
         if std::env::var("PILUM_MODE").is_ok_and(|m| m == "test") {
-            endpoint = Self::namespace_test().join(Self::DATABASE);
+            endpoint = Self::namespace_test()?.join(Self::DATABASE);
         }
 
         Self::connect(endpoint).await
@@ -88,11 +90,8 @@ impl Database {
     /// This method is used to remove the database directory. This function
     /// deletes the whole application directory in production!
     ///
-    pub fn cleanup_production() -> std::io::Result<()> {
-        if Self::namespace_production().exists() {
-            std::fs::remove_dir_all(Self::namespace_production())?
-        }
-        Ok(())
+    pub fn cleanup_production() -> Result<()> {
+        Self::cleanup(Self::namespace_production()?)
     }
 
     /// Removes the test database directory.
@@ -100,25 +99,32 @@ impl Database {
     /// This method is used to remove the test database directory. It is typically
     /// used after running the tests to clean up the test database.
     ///
-    pub fn cleanup_test() -> std::io::Result<()> {
-        if Self::namespace_test().exists() {
-            std::fs::remove_dir_all(Self::namespace_test())?
+    pub fn cleanup_test() -> Result<()> {
+        Self::cleanup(Self::namespace_test()?)
+    }
+
+    /// Removes the directory at the given path.
+    ///
+    /// This method is used to remove a directory. It checks if the directory
+    /// exists and then deletes it.
+    ///
+    fn cleanup(path: PathBuf) -> Result<()> {
+        if path.exists() {
+            std::fs::remove_dir_all(&path)?
         }
         Ok(())
     }
 
     /// Returns the path where the production database resides in.
-    fn namespace_production() -> PathBuf {
-        dirs::home_dir()
-            .unwrap()
-            .join(format!(".{}", Self::NAMESPACE))
+    fn namespace_production() -> Result<PathBuf> {
+        let home_dir = dirs::home_dir().ok_or("Failed to get home directory.")?;
+        Ok(home_dir.join(format!(".{}", Self::NAMESPACE)))
     }
 
     /// Returns the path where the test database resides in.
-    fn namespace_test() -> PathBuf {
-        std::env::current_dir()
-            .unwrap()
-            .join("tmp")
-            .join(Self::NAMESPACE)
+    fn namespace_test() -> Result<PathBuf> {
+        let current_dir = std::env::current_dir()
+            .map_err(|e| format!("Failed to get current directory: {}", e))?;
+        Ok(current_dir.join("tmp").join(Self::NAMESPACE))
     }
 }

@@ -13,7 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- None
+- Extracted the task struct from [lib.rs](src/lib.rs) to [task.rs](src/task.rs).
+- Extracted available commands from [lib.rs](src/lib.rs) to [command.rs](src/command.rs).
+- The database is now passed around as a reference instead of instantiating it in every command.
 
 ### Deprecated
 
@@ -21,12 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Removed the error module for now and simplified error handling in general by introducing a
+- Removed the `error.rs` module for now and simplified error handling in general by introducing a
   custom Result and Error type for the whole library.
 
 ### Fixed
 
-- None
+- All `use` statements now use {} for multiple imports from the same module more consistently.
 
 ### Security
 
