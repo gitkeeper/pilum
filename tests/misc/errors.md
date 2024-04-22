@@ -1,6 +1,6 @@
 # Use Case: Errors
 
-`pilum unknown` is an unknown command and therefore returns an error with exitcode `2`:
+`pilum unknown` is an unknown command and therefore returns an error with exit code `2`:
 
 ```console
 $ pilum unknown
@@ -13,7 +13,7 @@ For more information, try '--help'.
 
 ```
 
-`pilum` supplies no command whatsoever and therefore returns an error with exitcode `2`:
+`pilum` supplies no command whatsoever and therefore returns an error with exit code `2`:
 
 ```console
 $ pilum

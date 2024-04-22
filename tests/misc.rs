@@ -9,7 +9,7 @@
 //! reads these `.md` files and evaluates the results for their correctness.
 //!
 #[test]
-fn use_case_help() {
+fn misc() {
     trycmd::TestCases::new()
         .env("PILUM_MODE", "test")
         .case("tests/misc/*.md");
