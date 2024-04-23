@@ -25,7 +25,10 @@ pub enum Commands {
     /// Deletes the specified task.
     Delete,
     /// Marks the specified task as completed.
-    Done,
+    Done {
+        /// The task number to mark as done.
+        numbers: Vec<i64>,
+    },
     /// Duplicates the specified tasks.
     Duplicate,
     /// Shows most details of tasks.
@@ -78,6 +81,7 @@ impl Cli {
         match args.command {
             Some(Commands::Add { names }) => add_task(&db, names).await?,
             Some(Commands::All) => list_all_tasks(&db).await?,
+            Some(Commands::Done { numbers }) => complete_task(&db, numbers).await?,
             None => exit_no_subcommand(),
             _ => exit_unknown_subcommand(),
         }

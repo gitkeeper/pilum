@@ -18,6 +18,13 @@ use serde::{Deserialize, Serialize};
 pub struct Task {
     number: i64,
     name: String,
+    status: TaskStatus,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum TaskStatus {
+    Pending,
+    Completed,
 }
 
 impl Task {
@@ -33,7 +40,11 @@ impl Task {
     /// The function returns a new `Task` instance with the specified number and name.
     ///
     pub fn new(number: i64, name: String) -> Self {
-        Self { number, name }
+        Self {
+            number,
+            name,
+            status: TaskStatus::Pending,
+        }
     }
 
     /// Gets the number of the task.
@@ -54,5 +65,18 @@ impl Task {
     ///
     pub fn name(&self) -> &str {
         &self.name
+    }
+
+    /// Marks the task as completed.
+    ///
+    /// The function changes the status of the task to `Completed`.
+    ///
+    /// # Returns
+    ///
+    /// The function returns a mutable reference to the task.
+    ///
+    pub fn complete(&mut self) -> &mut Self {
+        self.status = TaskStatus::Completed;
+        self
     }
 }

@@ -12,7 +12,7 @@ No tasks found.
 
 ```console
 $ pilum add "Buy flour"
-Created task 1: Buy flour
+Created task 1 'Buy flour'.
 
 ```
 
@@ -20,10 +20,10 @@ Created task 1: Buy flour
 
 ```console
 $ pilum add "Buy milk"
-Created task 2: Buy milk
+Created task 2 'Buy milk'.
 
 $ pilum add "Buy eggs"
-Created task 3: Buy eggs
+Created task 3 'Buy eggs'.
 
 ```
 
@@ -31,8 +31,8 @@ Created task 3: Buy eggs
 
 ```console
 $ pilum add "Buy sugar" "Bake cake"
-Created task 4: Buy sugar
-Created task 5: Bake cake
+Created task 4 'Buy sugar'.
+Created task 5 'Bake cake'.
 
 ```
 
@@ -40,10 +40,29 @@ Created task 5: Bake cake
 
 ```console
 $ pilum all
-1: Buy flour
-2: Buy milk
-3: Buy eggs
-4: Buy sugar
-5: Bake cake
+1 'Buy flour'
+2 'Buy milk'
+3 'Buy eggs'
+4 'Buy sugar'
+5 'Bake cake'
+
+```
+
+`pilum done 1` marks the task number 1 as completed:
+
+```console
+$ pilum done 1
+Completed task 1 'Buy flour'.
+Completed 1 task.
+
+```
+
+`pilum done 1` marks the task number 2 and 3 as completed:
+
+```console
+$ pilum done 2 3
+Completed task 2 'Buy milk'.
+Completed task 3 'Buy eggs'.
+Completed 2 tasks.
 
 ```
