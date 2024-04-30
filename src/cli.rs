@@ -1,8 +1,6 @@
-//! The `cli` module contains the command-line interface for the application.
+//! # CLI
 //!
-//! The `Cli` struct is responsible for parsing command-line arguments and
-//! executing the corresponding commands. It uses the `Commands` enum to define
-//! the available commands for the application.
+//! This module contains the command-line interface for the application.
 //!
 use crate::database::Database;
 use crate::{command::*, Result};

@@ -1,11 +1,7 @@
-//! The `task` module contains the `Task` struct.
+//! # Task
 //!
-//! The `Task` struct represents a task in the task list. It has a number and a name.
-//! The number is a unique identifier for the task, and the name is a short description
-//! of the task.
-//!
-//! The `Task` struct provides methods to create a new task, get the task number, and
-//! get the task name.
+//! This module contains the `Task` struct with its implementations as well as
+//! the `TaskStatus` enum with is various statuses.
 //!
 use crate::Result;
 use serde::{Deserialize, Serialize};
@@ -95,6 +91,8 @@ impl Task {
         Ok(updated.unwrap())
     }
 
+    /// Prints the task's number and name.
+    ///
     pub fn print_number_and_name(&self) {
         println!("{} '{}'", self.number(), self.name());
     }

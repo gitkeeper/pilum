@@ -1,25 +1,13 @@
-//! The `command` module contains functions that implement the command-line
-//! interface for the application.
+//! # Commands
 //!
-//! Public functions:
-//! - The public `add_task` function adds a new pending task to the task list.
-//! - The public `list_all_tasks` function lists all the tasks in the task list.
-//!
-//! Private functions:
-//! - The private `next_task_number` function gets the next task number to be used.
+//! This module contains functions that implement the command-line interface for
+//! the application.
 //!
 use crate::{task::Task, Result};
 use std::fmt::Display;
 use surrealdb::{engine::local::Db, Surreal};
 
 /// Adds a new pending task to the task list.
-///
-/// The `add_task` function takes a `name` parameter, which is the name of the task
-/// to be added. It then initializes the SurrealDB database and prints a message
-/// indicating that the task has been created.
-///
-/// The function is asynchronous because it calls the `Database::new` method, which
-/// is asynchronous.
 ///
 /// # Parameters
 ///
@@ -44,14 +32,6 @@ pub async fn add_task(db: &Surreal<Db>, names: Vec<String>) -> Result<()> {
 }
 
 /// Completes the specified tasks in the task list.
-///
-/// The `complete_task` function takes a list of task numbers and marks the tasks
-/// with those numbers as completed. It initializes the SurrealDB database, queries
-/// the database for the tasks with the specified numbers, and marks them as completed.
-/// It then prints a message indicating that the tasks have been completed.
-///
-/// The function is asynchronous because it calls the `Database::query` method, which
-/// is asynchronous.
 ///
 /// # Parameters
 ///
@@ -88,10 +68,6 @@ pub async fn complete_task(db: &Surreal<Db>, numbers: Vec<i64>) -> Result<()> {
 
 /// Lists all the tasks in the task list.
 ///
-/// The `list_all_tasks` function initializes the SurrealDB database and queries
-/// the database for all the tasks. It then prints the task number and name for
-/// each task found in the database.
-///
 /// # Parameters
 ///
 /// - `db`: A reference to the SurrealDB database.
@@ -107,14 +83,7 @@ pub async fn complete_task(db: &Surreal<Db>, numbers: Vec<i64>) -> Result<()> {
 pub async fn list_all_tasks(db: &Surreal<Db>) -> Result<()> {
     let sql = "SELECT * FROM tasks ORDER BY number ASC";
     let tasks: Vec<Task> = db.query(sql).await?.take(0)?;
-
-    if tasks.is_empty() {
-        println!("No tasks found.");
-    } else {
-        for task in tasks {
-            task.print_number_and_name();
-        }
-    }
+    print_tasks_with_number_and_name(&tasks);
 
     Ok(())
 }
@@ -136,24 +105,17 @@ pub async fn list_all_tasks(db: &Surreal<Db>) -> Result<()> {
 pub async fn list_completed_tasks(db: &Surreal<Db>) -> Result<()> {
     let sql = "SELECT * FROM tasks WHERE status = 'Completed' ORDER BY number ASC";
     let tasks: Vec<Task> = db.query(sql).await?.take(0)?;
-
-    if tasks.is_empty() {
-        println!("No completed tasks.");
-    } else {
-        for task in tasks {
-            task.print_number_and_name();
-        }
-    }
+    print_tasks_with_number_and_name(&tasks);
 
     Ok(())
 }
 
 /// Gets the next task number.
 ///
-/// The `next_task_number` function takes a reference to the SurrealDB database
-/// and returns the next task number to be used. It queries the database for the
-/// existing tasks, finds the maximum task number, and increments it by one to
-/// get the next task number.
+/// The function takes a reference to the SurrealDB database and returns the
+/// next task number to be used. It queries the database for the existing tasks,
+/// finds the maximum task number, and increments it by one to get the next task
+/// number.
 ///
 /// # Parameters
 ///
@@ -175,10 +137,6 @@ async fn next_task_number(db: &Surreal<Db>) -> Result<i64> {
 
 /// Converts a vector of items to a string array.
 ///
-/// The `vec_to_array` function takes a reference to a vector of items and
-/// converts it to a string array. It maps each item to a string representation
-/// and joins them with a comma separator.
-///
 /// # Parameters
 ///
 /// - `items`: A reference to a vector of items.
@@ -196,10 +154,23 @@ fn vec_to_array<T: Display>(items: &[T]) -> String {
     format!("[{}]", items)
 }
 
-/// Prints a message for the specified task.
+/// Prints the number and name of each task in the given vector.
 ///
-/// The `print_task_action` function takes an action and a task and prints a
-/// message indicating the action performed on the task.
+/// # Parameters
+///
+/// - `tasks` - A vector containing tasks.
+///
+fn print_tasks_with_number_and_name(tasks: &Vec<Task>) {
+    if tasks.is_empty() {
+        println!("No tasks found.");
+    } else {
+        for task in tasks {
+            task.print_number_and_name();
+        }
+    }
+}
+
+/// Prints a message for the specified task.
 ///
 /// # Parameters
 ///
@@ -211,10 +182,6 @@ fn print_task_action(action: &str, task: &Task) {
 }
 
 /// Prints a summary message for the specified task action.
-///
-/// The `print_task_action_summary` function takes an action and a counter and
-/// prints a summary message indicating the number of tasks that given action
-/// was applied to.
 ///
 /// # Parameters
 ///

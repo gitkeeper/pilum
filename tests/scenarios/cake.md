@@ -12,7 +12,7 @@ No tasks found.
 
 ```console
 $ pilum completed
-No completed tasks.
+No tasks found.
 
 ```
 
