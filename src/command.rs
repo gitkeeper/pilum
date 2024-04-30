@@ -76,7 +76,7 @@ pub async fn complete_task(db: &Surreal<Db>, numbers: Vec<i64>) -> Result<()> {
     let mut counter = 0;
 
     for mut task in tasks {
-        task.complete();
+        task.complete(db).await?;
         print_task_action("Completed", &task);
         counter += 1;
     }

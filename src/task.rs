@@ -7,7 +7,9 @@
 //! The `Task` struct provides methods to create a new task, get the task number, and
 //! get the task name.
 //!
+use crate::Result;
 use serde::{Deserialize, Serialize};
+use surrealdb::{engine::local::Db, sql::Thing, Surreal};
 
 /// A task is a unit of work that needs to be done.
 ///
@@ -16,11 +18,16 @@ use serde::{Deserialize, Serialize};
 ///
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Task {
+    id: Option<Thing>,
     number: i64,
     name: String,
     status: TaskStatus,
 }
 
+/// There are various statuses for a task.
+///
+/// A task can have exactly one status.
+///
 #[derive(Debug, Serialize, Deserialize)]
 enum TaskStatus {
     Pending,
@@ -41,13 +48,14 @@ impl Task {
     ///
     pub fn new(number: i64, name: String) -> Self {
         Self {
+            id: None,
             number,
             name,
             status: TaskStatus::Pending,
         }
     }
 
-    /// Gets the number of the task.
+    /// Gets the task's number.
     ///
     /// # Returns
     ///
@@ -67,16 +75,33 @@ impl Task {
         &self.name
     }
 
-    /// Marks the task as completed.
+    /// Marks the task as completed and updates it in the database.
     ///
-    /// The function changes the status of the task to `Completed`.
+    /// # Arguments
+    ///
+    /// * `db` - A reference to a `Surreal<Db>` object representing the database.
     ///
     /// # Returns
     ///
-    /// The function returns a mutable reference to the task.
+    /// Returns a `Result` with the updated `Task` object if the operation is successful.
     ///
-    pub fn complete(&mut self) -> &mut Self {
+    /// # Errors
+    ///
+    /// Returns an error if there was a problem updating the task in the database.
+    ///
+    pub async fn complete(&mut self, db: &Surreal<Db>) -> Result<Task> {
         self.status = TaskStatus::Completed;
-        self
+        let updated: Option<Task> = db.update(self.id()).content(self).await?;
+        Ok(updated.unwrap())
+    }
+
+    /// Gets the task's unique id given by the database.
+    ///
+    /// # Returns
+    ///
+    /// The function returns the task's unique id.
+    ///
+    fn id(&self) -> &Thing {
+        self.id.as_ref().unwrap()
     }
 }
