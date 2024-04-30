@@ -81,6 +81,7 @@ impl Cli {
         match args.command {
             Some(Commands::Add { names }) => add_task(&db, names).await?,
             Some(Commands::All) => list_all_tasks(&db).await?,
+            Some(Commands::Completed) => list_completed_tasks(&db).await?,
             Some(Commands::Done { numbers }) => complete_task(&db, numbers).await?,
             None => exit_no_subcommand(),
             _ => exit_unknown_subcommand(),

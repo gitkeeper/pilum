@@ -77,9 +77,9 @@ impl Task {
 
     /// Marks the task as completed and updates it in the database.
     ///
-    /// # Arguments
+    /// # Parameters
     ///
-    /// * `db` - A reference to a `Surreal<Db>` object representing the database.
+    /// - `db` - A reference to a `Surreal<Db>` object representing the database.
     ///
     /// # Returns
     ///
@@ -93,6 +93,10 @@ impl Task {
         self.status = TaskStatus::Completed;
         let updated: Option<Task> = db.update(self.id()).content(self).await?;
         Ok(updated.unwrap())
+    }
+
+    pub fn print_number_and_name(&self) {
+        println!("{} '{}'", self.number(), self.name());
     }
 
     /// Gets the task's unique id given by the database.

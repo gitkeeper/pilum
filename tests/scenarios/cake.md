@@ -8,6 +8,14 @@ No tasks found.
 
 ```
 
+`pilum completed` has no tasks to show initially:
+
+```console
+$ pilum completed
+No completed tasks.
+
+```
+
 `pilum add "Buy milk"` adds a new pending task to the task list:
 
 ```console
@@ -64,5 +72,15 @@ $ pilum done 2 3
 Completed task 2 'Buy milk'.
 Completed task 3 'Buy eggs'.
 Completed 2 tasks.
+
+```
+
+`pilum completed` marks the task number 2 and 3 as completed:
+
+```console
+$ pilum completed
+1 'Buy flour'
+2 'Buy milk'
+3 'Buy eggs'
 
 ```

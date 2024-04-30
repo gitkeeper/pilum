@@ -112,7 +112,36 @@ pub async fn list_all_tasks(db: &Surreal<Db>) -> Result<()> {
         println!("No tasks found.");
     } else {
         for task in tasks {
-            println!("{} '{}'", task.number(), task.name());
+            task.print_number_and_name();
+        }
+    }
+
+    Ok(())
+}
+
+/// Lists all completed tasks from the database.
+///
+/// # Parameters
+///
+/// - `db`: A reference to the SurrealDB database.
+///
+/// # Returns
+///
+/// Returns a `Result` indicating success or failure.
+///
+/// # Errors
+///
+/// The function will return an error if the database query fails.
+///
+pub async fn list_completed_tasks(db: &Surreal<Db>) -> Result<()> {
+    let sql = "SELECT * FROM tasks WHERE status = 'Completed' ORDER BY number ASC";
+    let tasks: Vec<Task> = db.query(sql).await?.take(0)?;
+
+    if tasks.is_empty() {
+        println!("No completed tasks.");
+    } else {
+        for task in tasks {
+            task.print_number_and_name();
         }
     }
 
