@@ -3,7 +3,7 @@
 //! This module contains common utility functions that are shared across the
 //! whole application.
 //!
-use crate::task::Task;
+use crate::task::{Task, TaskStatus};
 use std::fmt::Display;
 
 /// Converts a vector of items to a string array.
@@ -36,7 +36,7 @@ pub fn print_task_list(tasks: &Vec<Task>) {
         println!("No tasks found.");
     } else {
         for task in tasks {
-            task.print_number_and_name();
+            println!("{}", task.number_and_name());
         }
     }
 }
@@ -48,8 +48,8 @@ pub fn print_task_list(tasks: &Vec<Task>) {
 /// - `action`: The action performed on the tasks.
 /// - `counter`: The number of tasks the action was applied to.
 ///
-pub fn print_task_action(action: &str, task: &Task) {
-    println!("{} task {} '{}'.", action, task.number(), task.name());
+pub fn print_task_action(action: TaskStatus, task: &Task) {
+    println!("{} task {}.", action, task.number_and_name());
 }
 
 /// Prints a summary message for the specified task action.
@@ -59,7 +59,7 @@ pub fn print_task_action(action: &str, task: &Task) {
 /// - `action`: The action performed on the tasks.
 /// - `counter`: The number of tasks the action was applied to.
 ///
-pub fn print_task_action_summary(action: &str, counter: i64) {
+pub fn print_task_action_summary(action: TaskStatus, counter: i64) {
     match counter {
         1 => println!("{} {} task.", action, counter),
         _ => println!("{} {} tasks.", action, counter),

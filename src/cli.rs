@@ -11,7 +11,7 @@ use clap::{Parser, Subcommand};
 pub enum Commands {
     /// Shows active tasks.
     Active,
-    /// Adds a new pending task to the task list.
+    /// Adds new pending tasks.
     Add {
         /// The name or multiple names for tasks to add.
         names: Vec<String>,
@@ -22,9 +22,9 @@ pub enum Commands {
     Completed,
     /// Deletes the specified task.
     Delete,
-    /// Marks the specified task as completed.
+    /// Marks the specified tasks as completed.
     Done {
-        /// The task number to mark as done.
+        /// The task numbers to mark as done.
         numbers: Vec<i64>,
     },
     /// Duplicates the specified tasks.
@@ -33,6 +33,11 @@ pub enum Commands {
     List,
     /// Modifies the existing task with provided arguments.
     Modify,
+    /// Starts the specified tasks.
+    Start {
+        /// The task numbers to mark as done.
+        numbers: Vec<i64>,
+    },
 }
 
 /// Pilum is a sophisticated task manager with a CLI and a GUI written in Rust.
@@ -77,10 +82,12 @@ impl Cli {
         let db = Database::initialize().await?;
 
         match args.command {
+            Some(Commands::Active) => list_active_tasks(&db).await?,
             Some(Commands::Add { names }) => add_tasks(&db, names).await?,
             Some(Commands::All) => list_all_tasks(&db).await?,
             Some(Commands::Completed) => list_completed_tasks(&db).await?,
             Some(Commands::Done { numbers }) => complete_tasks(&db, numbers).await?,
+            Some(Commands::Start { numbers }) => start_tasks(&db, numbers).await?,
             None => exit_no_subcommand(),
             _ => exit_unknown_subcommand(),
         }
