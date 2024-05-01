@@ -23,7 +23,8 @@ task organization program.
 ## Installation
 
 For the time being, you must have [Rust](https://www.rust-lang.org/) installed on your machine. To install Rust, it's
-recommended to follow [Rust's installation instructions](https://www.rust-lang.org/tools/install) for your respective operating system.
+recommended to follow [Rust's installation instructions](https://www.rust-lang.org/tools/install) for your respective
+operating system.
 
 Afterward, you can install Pilum by running `cargo install pilum`.
 
@@ -33,10 +34,7 @@ Pilum's command-line interface is invoked with the following pattern:
 
 `pilum <filter> <command> [ <mods> | <args> ]`
 
-The following commands are available as of now:
-
-- `pilum add <task name>...`
-- `pilum all`
+For further information run `pilum --help`.
 
 ## Development
 

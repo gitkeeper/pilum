@@ -14,14 +14,15 @@ Usage: pilum [COMMAND]
 
 Commands:
   active     Shows active tasks
-  add        Adds a new pending task to the task list
+  add        Adds new pending tasks
   all        Shows all tasks
   completed  Shows completed tasks
   delete     Deletes the specified task
-  done       Marks the specified task as completed
+  done       Marks the specified tasks as completed
   duplicate  Duplicates the specified tasks
   list       Shows most details of tasks
   modify     Modifies the existing task with provided arguments
+  start      Starts the specified tasks
   help       Print this message or the help of the given subcommand(s)
 
 Options:
@@ -47,14 +48,15 @@ Usage: pilum [COMMAND]
 
 Commands:
   active     Shows active tasks
-  add        Adds a new pending task to the task list
+  add        Adds new pending tasks
   all        Shows all tasks
   completed  Shows completed tasks
   delete     Deletes the specified task
-  done       Marks the specified task as completed
+  done       Marks the specified tasks as completed
   duplicate  Duplicates the specified tasks
   list       Shows most details of tasks
   modify     Modifies the existing task with provided arguments
+  start      Starts the specified tasks
   help       Print this message or the help of the given subcommand(s)
 
 Options:
@@ -76,14 +78,15 @@ Usage: pilum [COMMAND]
 
 Commands:
   active     Shows active tasks
-  add        Adds a new pending task to the task list
+  add        Adds new pending tasks
   all        Shows all tasks
   completed  Shows completed tasks
   delete     Deletes the specified task
-  done       Marks the specified task as completed
+  done       Marks the specified tasks as completed
   duplicate  Duplicates the specified tasks
   list       Shows most details of tasks
   modify     Modifies the existing task with provided arguments
+  start      Starts the specified tasks
   help       Print this message or the help of the given subcommand(s)
 
 Options:

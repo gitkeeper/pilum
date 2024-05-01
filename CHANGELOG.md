@@ -13,13 +13,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Extracted the task struct from [lib.rs](src/lib.rs) to [task.rs](src/task.rs).
-- Extracted available commands from [lib.rs](src/lib.rs) to [command.rs](src/command.rs).
-- The database is now passed around as a reference instead of instantiating it in every command.
+- None
 
 ### Deprecated
 
 - None
+
+### Removed
+
+- None
+
+### Fixed
+
+- None
+
+### Security
+
+- None
+
+## [0.3.0] - 2024-05-01
+
+### Added
+
+- Implemented the following commands: `start`, `active` and `done`.
+
+### Changed
+
+- Pilum now uses its own custom Result type.
+- The database is passed around as a reference instead of instantiating it in every command.
+- Extracted the task struct from [lib.rs](src/lib.rs) to [task.rs](src/task.rs).
+- Extracted available commands from [lib.rs](src/lib.rs) to [command.rs](src/command.rs).
+- The main library [lib.rs](src/lib.rs) is only responsible for declaring the public interface.
+- Common utility functions have been extracted to [utilities.rs](src/utilities.rs) for now.
 
 ### Removed
 
@@ -29,10 +54,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - All `use` statements now use {} for multiple imports from the same module more consistently.
+- Streamlined the function and module documentation to have the same structure everywhere.
+- Fixed some spelling mistakes in code comments and tests.
 
 ### Security
 
-- None
+- There is a known issue of a Marvin Attack, which does a potential key recovery through timing sidechannels.
+  This problem exists inside the RSA package which in turn is used by SurrealDB. No action is taken as the
+  database is local only.
 
 ## [0.2.1] - 2024-04-18
 
