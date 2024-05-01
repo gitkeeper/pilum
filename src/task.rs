@@ -31,6 +31,8 @@ enum TaskStatus {
 }
 
 impl Task {
+    pub const TABLE: &'static str = "tasks";
+
     /// Creates a new task with the specified number and name.
     ///
     /// # Parameters
@@ -85,9 +87,27 @@ impl Task {
     ///
     /// Returns an error if there was a problem updating the task in the database.
     ///
-    pub async fn complete(&mut self, db: &Surreal<Db>) -> Result<Task> {
+    pub fn complete(&mut self) -> &Self {
         self.status = TaskStatus::Completed;
-        let updated: Option<Task> = db.update(self.id()).content(self).await?;
+        self
+    }
+
+    /// Updateds the task inside the database.
+    ///
+    /// # Parameters
+    ///
+    /// - `db` - A reference to a `Surreal<Db>` object representing the database.
+    ///
+    /// # Returns
+    ///
+    /// Returns a `Result` with the updated `Task` object if the operation is successful.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if there was a problem updating the task in the database.
+    ///
+    pub async fn update(&self, db: &Surreal<Db>) -> Result<Self> {
+        let updated: Option<Self> = db.update(self.id()).content(self).await?;
         Ok(updated.unwrap())
     }
 

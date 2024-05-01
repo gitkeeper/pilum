@@ -87,8 +87,17 @@ impl Database {
 
     /// Removes the production database directory.
     ///
-    /// This method is used to remove the database directory. This function
-    /// deletes the whole application directory in production!
+    /// This method is used to remove the production database directory. This
+    /// function deletes the whole application directory in production!
+    ///
+    /// # Returns
+    ///
+    /// The function returns `Ok(())` if the operation is successful.
+    ///
+    /// # Errors
+    ///
+    /// The function will return an error if the directory's removal fails  or
+    /// doesn't exist.
     ///
     pub fn cleanup_production() -> Result<()> {
         Self::cleanup(Self::namespace_production()?)
@@ -99,14 +108,33 @@ impl Database {
     /// This method is used to remove the test database directory. It is typically
     /// used after running the tests to clean up the test database.
     ///
+    /// # Returns
+    ///
+    /// The function returns `Ok(())` if the operation is successful.
+    ///
+    /// # Errors
+    ///
+    /// The function will return an error if the directory's removal fails  or
+    /// doesn't exist.
+    ///
     pub fn cleanup_test() -> Result<()> {
         Self::cleanup(Self::namespace_test()?)
     }
 
-    /// Removes the directory at the given path.
+    /// Removes the directory at the given path if it exists.
     ///
-    /// This method is used to remove a directory. It checks if the directory
-    /// exists and then deletes it.
+    /// # Parameters
+    ///
+    /// - `path`: the path to the directory that should be removed.
+    ///
+    /// # Returns
+    ///
+    /// The function returns `Ok(())` if the operation is successful.
+    ///
+    /// # Errors
+    ///
+    /// The function will return an error if the directory's removal fails  or
+    /// doesn't exist.
     ///
     fn cleanup(path: PathBuf) -> Result<()> {
         if path.exists() {
@@ -116,12 +144,22 @@ impl Database {
     }
 
     /// Returns the path where the production database resides in.
+    ///
+    /// # Returns
+    ///
+    /// This function returns the path where the production database resides in.
+    ///
     fn namespace_production() -> Result<PathBuf> {
         let home_dir = dirs::home_dir().ok_or("Failed to get home directory.")?;
         Ok(home_dir.join(format!(".{}", Self::NAMESPACE)))
     }
 
     /// Returns the path where the test database resides in.
+    ///
+    /// # Returns
+    ///
+    /// This function returns the path where the test database resides in.
+    ///
     fn namespace_test() -> Result<PathBuf> {
         let current_dir = std::env::current_dir()
             .map_err(|e| format!("Failed to get current directory: {}", e))?;
