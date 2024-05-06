@@ -33,6 +33,22 @@ pub enum TaskStatus {
 }
 
 impl fmt::Display for TaskStatus {
+    /// Implementation of the `fmt::Display` trait for the `TaskStatus` enum
+    ///
+    /// This implementation of `fmt::Display` for `TaskStatus` provides a mechanism
+    /// for converting instances of `TaskStatus` into a string representation.
+    ///
+    /// # Parameters
+    ///
+    /// - `&self`: a reference to the `TaskStatus` instance
+    /// - `f`: mutable reference to a `std::fmt::Formatter`
+    ///
+    /// # Returns
+    ///
+    /// This method returns `Result<(), Error>`:
+    /// - `Ok(())` if the operation was successful
+    /// - `Err(std::fmt::Error)` if an error occurred
+    ///
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             TaskStatus::Pending => write!(f, "Pending"),
