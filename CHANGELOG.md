@@ -31,6 +31,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - None
 
+## [0.2.0] - 2024-09-28
+
+### Added
+
+- The main function loops through input numbers to execute a certain command.
+- Added a `Task` struct to hold a task's data like its id, its title and if it's completed or not.
+- Added a `TaskList` to hold all tasks inside a vector to iterate over.
+- Implemented `new`, `add_task`, `list_tasks` and `complete_task` for `TaskList`.
+
 ## [0.1.0] - 2024-09-28
 
 ### Added
