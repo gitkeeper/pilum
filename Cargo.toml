@@ -1,0 +1,16 @@
+[package]
+name = "pilum"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+authors = ["Alexander Baumann <alexander.baumann@bluewin.ch"]
+description = "Pilum is a simple task manager with a CLI written in Rust."
+homepage = "https://github.com/gitkeeper/pilum"
+repository = "https://github.com/gitkeeper/pilum"
+keywords = ["task", "manager", "productivity", "cli", "gui"]
+categories = ["command-line-utilities", "command-line-interface", "gui"]
+readme = "README.md"
+
+[dependencies]
+
+[dev-dependencies]
