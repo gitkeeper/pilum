@@ -25,7 +25,9 @@ Afterward, you can install Pilum by running `cargo install pilum`.
 
 Pilum's command-line interface is invoked with the following pattern:
 
-`pilum <filter> <command> [ <mods> | <args> ]`
+`pilum`
+
+… and then by entering a number corresponding the action to take.
 
 For further information run `pilum --help`.
 
